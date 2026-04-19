@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEVELOPER KOMEDI - Portal Tertawa Para Koder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@400;700&display=swap');
+
+        :root {
+            --primary: #ff4757;
+            --secondary: #2f3542;
+            --accent: #ffa502;
+            --bg: #1e272e;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: #000;
+            border-right: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .header-box {
+            padding: 20px;
+            background: var(--primary);
+            text-align: center;
+        }
+
+        .header-box h1 {
+            font-family: 'Bungee', cursive;
+            font-size: 1.5rem;
+            margin: 0;
+            line-height: 1;
+            color: #fff;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .menu-item:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: var(--accent);
+            color: black;
+        }
+
+        .menu-item span {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* MAIN CONTENT */
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        #top-bar {
+            height: 60px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+            border-bottom: 2px solid #333;
+        }
+
+        .status-pill {
+            background: #2ecc71;
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 900;
+        }
+
+        #content-frame {
+            flex: 1;
+            border: none;
+            background: #fff;
+        }
+
+        /* WELCOME SCREEN */
+        #welcome {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-family: 'Bungee', cursive;
+            font-size: 4rem;
+            color: var(--accent);
+            text-shadow: 5px 5px 0 var(--primary);
+        }
+
+        .btn-start {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            font-family: 'Bungee', cursive;
+            border: 4px solid #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 10px 10px 0 #000;
+        }
+
+        /* MOBILE OVERLAY */
+        @media (max-width: 768px) {
+            #sidebar { position: absolute; left: -100%; z-index: 200; height: 100%; }
+            #sidebar.open { left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside id="sidebar">
+        <div class="header-box">
+            <h1>DEV<br>KOMEDI</h1>
+            <p style="font-size: 0.7rem; margin-top: 5px;">Misi: Bikin Programmer Ketawa</p>
+        </div>
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="loadComp(1, this)"><span>💾</span> 01. CTRL+S Trauma</li>
+            <li class="menu-item" onclick="loadComp(2, this)"><span>💡</span> 02. Ilusi "Gampang"</li>
+            <li class="menu-item" onclick="loadComp(3, this)"><span>🔍</span> 03. Tutorial vs Realita</li>
+            <li class="menu-item" onclick="loadComp(4, this)"><span>🌙</span> 04. Evolusi Kopi</li>
+            <li class="menu-item" onclick="loadComp(5, this)"><span>🐞</span> 05. Bug ke Fitur</li>
+            <li class="menu-item" onclick="loadComp(6, this)"><span>🤝</span> 06. Janji Manis PM</li>
+            <li class="menu-item" onclick="loadComp(7, this)"><span>📂</span> 07. Final_Final_Fix</li>
+            <li class="menu-item" onclick="loadComp(8, this)"><span>🔥</span> 08. Deadline Horror</li>
+            <li class="menu-item" onclick="loadComp(9, this)"><span>🤔</span> 09. Kode Siapa Ini?</li>
+            <li class="menu-item" onclick="loadComp(10, this)"><span>🚀</span> 10. Deploy Jumat Sore</li>
+            <li class="menu-item" onclick="loadComp(11, this)"><span>😵</span> 11. Tutorial YouTube</li>
+            <li class="menu-item" onclick="loadComp(12, this)"><span>🕳️</span> 12. Rabbit Hole</li>
+            <li class="menu-item" onclick="loadComp(13, this)"><span>🦢</span> 13. FE vs BE Reality</li>
+            <li class="menu-item" onclick="loadComp(14, this)"><span>☕</span> 14. Caffeine Booting</li>
+            <li class="menu-item" onclick="loadComp(15, this)"><span>❌</span> 15. Kutukan Titik Koma</li>
+            <li class="menu-item" onclick="loadComp(16, this)"><span>🔮</span> 16. Mantra Regex</li>
+            <li class="menu-item" onclick="loadComp(17, this)"><span>👻</span> 17. Bug Pemalu</li>
+            <li class="menu-item" onclick="loadComp(18, this)"><span>🏚️</span> 18. Legacy Horror</li>
+            <li class="menu-item" onclick="loadComp(19, this)"><span>🧛</span> 19. Mode Kelelawar</li>
+            <li class="menu-item" onclick="loadComp(20, this)"><span>🎉</span> 20. Depresi Cuan</li>
+        </ul>
+        <div style="padding: 20px; font-size: 10px; opacity: 0.5;">
+            Created for Bos Cak by Gemini SPY-E
+        </div>
+    </aside>
+
+    <main id="main">
+        <div id="welcome">
+            <div class="welcome-title">DEVELOPER<br>KOMEDI</div>
+            <p style="font-size: 1.2rem;">Portal 20 Jenaka Kehidupan Programmer</p>
+            <button class="btn-start" onclick="closeWelcome()">GASS POLL!</button>
+        </div>
+
+        <div id="top-bar">
+            <div style="display: flex; align-items: center;">
+                <span id="current-title" style="font-weight: 900; font-family: 'Bungee'; color: var(--accent);">01. CTRL+S TRAUMA</span>
+            </div>
+            <div class="status-pill">BRAIN STATUS: OVERHEATING</div>
+        </div>
+
+        <iframe id="content-frame" src="about:blank"></iframe>
+    </main>
+
+    <script>
+        function closeWelcome() {
+            document.getElementById('welcome').style.display = 'none';
+            loadComp(1, document.querySelector('.menu-item'));
+        }
+
+        function loadComp(id, el) {
+            // Update Active Menu
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+
+            // Update Title
+            document.getElementById('current-title').textContent = el.textContent.trim();
+
+            // Load Content (In production, these would be separate .html files)
+            // For this demo, we use a placeholder or the content we've generated.
+            const frame = document.getElementById('content-frame');
+            frame.src = `komponen-${id}.html`; 
+            
+            // Note: Since we are in a sandbox, user will need to have all 20 files 
+            // in the same folder as this index.html to make it work.
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #16 - Kekuatan Regex</title>
+    <style>
+        :root {
+            --regex-purple: #9c88ff;
+            --succ-green: #55efc4;
+            --err-red: #ff7675;
+            --bg-code: #2f3640;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Consolas', monospace;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-16 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .code-snippet {
+            background: #eee;
+            padding: 5px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--regex-purple);
+        }
+
+        #btn-regex-magic {
+            grid-column: span 2;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: THE REGEX VALIDATOR --- */
+        #regex-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--bg-code);
+            color: #dcdde1;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .regex-container {
+            width: 80%;
+            max-width: 600px;
+            background: #000;
+            border: 2px solid var(--regex-purple);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .regex-pattern {
+            color: var(--regex-purple);
+            transition: all 0.3s ease;
+        }
+
+        .regex-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            color: white;
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .regex-input:focus { border-color: var(--regex-purple); }
+
+        .validation-status {
+            font-size: 5rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        body.switching #comic-page-16 { transform: scale(0.9); opacity: 0; }
+        body.switching #regex-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-16">
+        <div class="panel">
+            <div style="font-size: 50px;">🤔</div>
+            <p>"Cuma mau validasi format email. Gampang!"</p>
+        </div>
+        <div class="panel">
+            <div class="code-snippet">
+                ^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@<br>
+                ((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+            </div>
+            <p>"Menemukan Regex di Stack Overflow. Panjang!"</p>
+        </div>
+        <div class="panel" style="grid-column: span 2; height: 100px;">
+            <p><b>Realita:</b> Copy-Paste, jalan, gak paham.</p>
+            <div style="font-size: 40px;">🤡</div>
+        </div>
+        <button id="btn-regex-magic">AKTIFKAN SIHIR REGEX</button>
+    </div>
+
+    <div id="regex-page">
+        <div class="regex-container">
+            <div class="regex-pattern" id="regex-p">Validasi Email (Mantra)</div>
+            <p style="color:#aaa; font-size: 0.8rem; margin-top:5px;">Regex: ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$</p>
+        </div>
+        
+        <input type="text" class="regex-input" id="regex-i" placeholder="Ketik Email Di Sini">
+        <div class="validation-status" id="regex-s"></div>
+        <p style="position: absolute; bottom: 40px; color: var(--regex-purple); font-family: monospace;">[*] Mengecek validitas mantra...</p>
+    </div>
+
+    <script>
+        const btnMagic = document.getElementById('btn-regex-magic');
+        const regexInput = document.getElementById('regex-i');
+        const regexStatus = document.getElementById('regex-s');
+        const regexPattern = document.getElementById('regex-p');
+
+        btnMagic.addEventListener('click', () => {
+            document.body.classList.add('switching');
+        });
+
+        // Logika Validasi Regex
+        regexInput.addEventListener('input', () => {
+            const email = regexInput.value;
+            const mantra = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/; // Validasi email sederhana
+
+            if (mantra.test(email)) {
+                regexStatus.textContent = "✔"; // Centang hijau
+                regexStatus.style.color = "var(--succ-green)";
+                regexInput.style.borderColor = "var(--succ-green)";
+                regexPattern.style.color = "var(--succ-green)";
+                triggerMagicEffect('success');
+            } else {
+                regexStatus.textContent = "✘"; // Silang merah
+                regexStatus.style.color = "var(--err-red)";
+                regexInput.style.borderColor = "var(--err-red)";
+                regexPattern.style.color = "var(--err-red)";
+                triggerMagicEffect('error');
+            }
+        });
+
+        function triggerMagicEffect(type) {
+            // Efek getar Regex (sihir)
+            regexPattern.animate([
+                { transform: 'translate(1px, 1px)' },
+                { transform: 'translate(-1px, -1px)' },
+                { transform: 'translate(1px, -1px)' },
+                { transform: 'translate(-1px, 1px)' },
+                { transform: 'translate(1px, 1px)' }
+            ], {
+                duration: 100,
+                iterations: 5
+            });
+            
+            // Efek warna latar belakang
+            if (type === 'success') {
+                regexInput.style.boxShadow = '0 0 15px var(--succ-green)';
+            } else {
+                regexInput.style.boxShadow = '0 0 15px var(--err-red)';
+            }
+        }
+    </script>
+</body>
+</html>

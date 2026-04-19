@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #11 - Tragedi Deployment</title>
+    <style>
+        :root {
+            --success-green: #2ecc71;
+            --error-red: #e74c3c;
+            --bg-dark: #2c3e50;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (MODIFIKASI HAKI) --- */
+        #comic-page-11 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+            box-sizing: border-box;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .panel {
+            background: white;
+            border: 5px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-box {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .visual-preview {
+            width: 150px;
+            height: 100px;
+            border: 2px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+
+        #btn-deploy {
+            grid-column: span 2;
+            background: var(--error-red);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            border-bottom: 6px solid #c0392b;
+        }
+
+        /* --- FASE 2: SIMULASI ERROR PRODUKSI --- */
+        #deploy-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .progress-container {
+            width: 80%;
+            max-width: 500px;
+            height: 30px;
+            background: #eee;
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--success-green);
+        }
+
+        .error-screen {
+            display: none;
+            text-align: left;
+            width: 100%;
+            max-width: 800px;
+            color: #721c24;
+            background: #f8d7da;
+            padding: 30px;
+            border: 5px dashed #f5c6cb;
+            font-family: monospace;
+        }
+
+        body.switching #comic-page-11 { transform: translateY(-100vh); }
+        body.switching #deploy-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-11">
+        <div class="panel">
+            <div class="status-box" style="background: var(--success-green);">localhost:3000</div>
+            <div class="visual-preview">✨💎✨</div>
+            <p>"Di laptop lancar jaya, UI mulus, database kenceng."</p>
+        </div>
+        <div class="panel">
+            <div class="status-box" style="background: var(--error-red);">domain-asli.com</div>
+            <div class="visual-preview">🔥🚒🔥</div>
+            <p>"Di server tiba-tiba Database mati, Gambar pecah."</p>
+        </div>
+        <button id="btn-deploy">PUSH KE PRODUCTION (BISMILLAH LAGI)</button>
+    </div>
+
+    <div id="deploy-page">
+        <div id="uploading">
+            <h2 id="status-text">Sedang Mengirim File ke Server...</h2>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="error-box" class="error-screen">
+            <h1 style="color:red;">500 INTERNAL SERVER ERROR</h1>
+            <hr>
+            <p><strong>Pesan:</strong> Gak tau kenapa, pokoknya servernya ngambek.</p>
+            <p><strong>Lokasi:</strong> /home/user/public_html/index.php baris 0</p>
+            <p><strong>Detail:</strong> 
+                - Ekstensi PHP hilang misterius.<br>
+                - Database menolak koneksi karena password salah (padahal udah bener).<br>
+                - Folder 'uploads' lupa dikasih izin (Permission Denied).
+            </p>
+            <br>
+            <button onclick="location.reload()" style="padding:10px;">RESTART HIDUP SAYA</button>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-deploy');
+        const bar = document.getElementById('progress-bar');
+        const txt = document.getElementById('status-text');
+        const uploadArea = document.getElementById('uploading');
+        const errorBox = document.getElementById('error-box');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            startDeployment();
+        });
+
+        function startDeployment() {
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 99) {
+                    clearInterval(interval);
+                    triggerExplosion();
+                } else {
+                    width++;
+                    bar.style.width = width + '%';
+                    if(width > 40) txt.textContent = "Mengoptimasi Gambar (Boongan)...";
+                    if(width > 70) txt.textContent = "Menghapus Database Penting (Ups!)...";
+                    if(width > 90) txt.textContent = "Dikit lagi... hampir meledak...";
+                }
+            }, 50);
+        }
+
+        function triggerExplosion() {
+            document.body.style.background = "red";
+            setTimeout(() => {
+                document.body.style.background = "#fff";
+                uploadArea.style.display = "none";
+                errorBox.style.display = "block";
+                document.title = "PROJECT HANCUR!";
+            }, 100);
+        }
+    </script>
+</body>
+</html>

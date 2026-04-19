@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #8 - Jebakan Dokumentasi</title>
+    <style>
+        :root {
+            --docs-blue: #0070f3;
+            --bg-light: #fafafa;
+            --text-main: #111;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-light);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-8 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+            box-sizing: border-box;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            flex: 1;
+            gap: 15px;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .doc-icon { font-size: 60px; margin-bottom: 15px; }
+        .label { font-weight: 800; text-transform: uppercase; font-size: 0.9rem; color: var(--docs-blue); }
+
+        #btn-read-docs {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: DOKUMENTASI INFINITE --- */
+        #docs-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            transition: top 0.8s ease-in-out;
+        }
+
+        .docs-header {
+            height: 60px;
+            background: var(--docs-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-weight: bold;
+        }
+
+        #docs-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 20px 0;
+            border-left: 5px solid var(--docs-blue);
+        }
+
+        body.switching #comic-page-8 { transform: scale(0.5); opacity: 0; }
+        body.switching #docs-page { top: 0; }
+
+        .scrolling-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff4757;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-8">
+        <div class="panel-grid">
+            <div class="panel">
+                <div class="label">Ekspektasi</div>
+                <div class="doc-icon">📖</div>
+                <p>"Cuma 3 langkah instalasi. Gampang!"</p>
+            </div>
+            <div class="panel">
+                <div class="label" style="color: #ff4757;">Realita</div>
+                <div class="doc-icon">📜🏃💨</div>
+                <p>"Scroll 10 jam belum sampai ke bagian inti."</p>
+            </div>
+        </div>
+        <button id="btn-read-docs">BACA DOKUMENTASI LENGKAP (BERANI?)</button>
+    </div>
+
+    <div id="docs-page">
+        <div class="docs-header">Premium_SDK_Final_v99_FIX_BANGET_Dokumentasi.pdf</div>
+        <div id="docs-content">
+            <h1>Selamat Datang di Hutan Dokumentasi</h1>
+            <p>Untuk memulai, silakan baca 12.000 halaman pendahuluan ini agar tidak terjadi salah paham.</p>
+            
+            <div class="code-block">
+                npm install pusing-tujuh-keliling --global --paksa
+            </div>
+
+            <div id="infinite-area">
+                <p>Memuat sub-bab 1.1.0.1...</p>
+            </div>
+        </div>
+        <div id="warn" class="scrolling-warning">PERINGATAN: Scroll Anda sudah mencapai 2 KM!</div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-read-docs');
+        const content = document.getElementById('docs-content');
+        const area = document.getElementById('infinite-area');
+        const warn = document.getElementById('warn');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+        });
+
+        // Logika Infinite Scroll yang Bikin Emosi
+        content.addEventListener('scroll', () => {
+            if (content.scrollTop + content.clientHeight >= content.scrollHeight - 100) {
+                generateMoreDocs();
+            }
+            if (content.scrollTop > 2000) {
+                warn.style.display = "block";
+            }
+        });
+
+        function generateMoreDocs() {
+            const extra = document.createElement('div');
+            const funnyTexts = [
+                "<p><b>Sub-bab 45.2:</b> Mengapa Anda masih membaca ini? Seharusnya Anda sudah menyerah dan bertanya di grup Facebook.</p>",
+                "<div class='code-block'>// Kode ini tidak berfungsi di hari Jumat.<br>if(day === 'Friday') { throw new Error('Libur Bos'); }</div>",
+                "<p><b>Catatan Penting:</b> Jika muncul asap dari laptop, itu artinya proses 'indexing' sedang berjalan normal.</p>",
+                "<p><i>Lihat Lampiran Z untuk cara memperbaiki error yang bahkan kami sendiri tidak tahu cara memperbaikinya.</i></p>",
+                "<h2>Langkah 9.999:</h2><p>Hapus semua folder node_modules dan mulai hidup baru sebagai petani organik.</p>"
+            ];
+            
+            extra.innerHTML = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
+            area.appendChild(extra);
+        }
+    </script>
+</body>
+</html>

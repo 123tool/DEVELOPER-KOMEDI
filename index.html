@@ -15,17 +15,17 @@
             --sidebar-width: 280px;
         }
 
-        body {
-            margin: 0;
+        body, html {
+            margin: 0; padding: 0;
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
             color: white;
-            display: flex;
             height: 100vh;
+            display: flex;
             overflow: hidden;
         }
 
-        /* SIDEBAR */
+        /* --- SIDEBAR (DESKTOP) --- */
         #sidebar {
             width: var(--sidebar-width);
             background: #000;
@@ -33,7 +33,8 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            transition: all 0.3s;
+            z-index: 10;
+            transition: all 0.3s ease;
         }
 
         .header-box {
@@ -53,47 +54,36 @@
 
         .menu-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
+            padding: 0; margin: 0;
         }
 
         .menu-item {
             padding: 15px 20px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #222;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             align-items: center;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        .menu-item:hover {
-            background: var(--primary);
-            color: white;
-        }
+        .menu-item:hover { background: var(--primary); color: white; }
+        .menu-item.active { background: var(--accent); color: black; }
+        .menu-item span { margin-right: 10px; font-size: 1.1rem; }
 
-        .menu-item.active {
-            background: var(--accent);
-            color: black;
-        }
-
-        .menu-item span {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-
-        /* MAIN CONTENT */
+        /* --- MAIN CONTENT --- */
         #main {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            background: #111;
         }
 
         #top-bar {
             height: 60px;
-            background: #111;
+            background: #000;
             display: flex;
             align-items: center;
             padding: 0 20px;
@@ -101,22 +91,20 @@
             border-bottom: 2px solid #333;
         }
 
-        .status-pill {
-            background: #2ecc71;
-            color: black;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 900;
+        #current-title {
+            font-family: 'Bungee', cursive;
+            color: var(--accent);
+            font-size: 1rem;
         }
 
         #content-frame {
             flex: 1;
             border: none;
             background: #fff;
+            width: 100%;
         }
 
-        /* WELCOME SCREEN */
+        /* --- WELCOME SCREEN --- */
         #welcome {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -127,31 +115,80 @@
             align-items: center;
             z-index: 100;
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .welcome-title {
             font-family: 'Bungee', cursive;
             font-size: 4rem;
             color: var(--accent);
-            text-shadow: 5px 5px 0 var(--primary);
+            text-shadow: 6px 6px 0 var(--primary);
+            line-height: 1;
+            margin-bottom: 10px;
         }
 
         .btn-start {
             margin-top: 30px;
-            padding: 15px 40px;
+            padding: 18px 45px;
             background: var(--primary);
             color: white;
             font-family: 'Bungee', cursive;
             border: 4px solid #fff;
             cursor: pointer;
-            font-size: 1.2rem;
-            box-shadow: 10px 10px 0 #000;
+            font-size: 1.3rem;
+            box-shadow: 8px 8px 0 #000;
+            transition: transform 0.1s;
         }
 
-        /* MOBILE OVERLAY */
+        .btn-start:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0 #000; }
+
+        .branding-footer {
+            padding: 15px;
+            font-size: 10px;
+            opacity: 0.6;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* --- RESPONSIVE MODE (HP) --- */
         @media (max-width: 768px) {
-            #sidebar { position: absolute; left: -100%; z-index: 200; height: 100%; }
-            #sidebar.open { left: 0; }
+            body, html { flex-direction: column; }
+
+            #sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 120px;
+                flex-direction: column;
+                border-right: none;
+                border-bottom: 4px solid var(--primary);
+            }
+
+            .header-box { padding: 10px; }
+            .header-box h1 { font-size: 1.1rem; }
+            
+            /* Sidebar jadi horizontal scroll di HP */
+            .menu-list {
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .menu-item {
+                flex: 0 0 auto;
+                padding: 12px 18px;
+                border-bottom: none;
+                border-right: 1px solid #222;
+                font-size: 0.75rem;
+            }
+
+            .welcome-title { font-size: 2.2rem; }
+            
+            #top-bar { height: 50px; padding: 0 10px; }
+            #current-title { font-size: 0.8rem; }
+
+            .branding-footer { display: none; } /* Sembunyikan di sidebar HP */
         }
     </style>
 </head>
@@ -159,8 +196,8 @@
 
     <aside id="sidebar">
         <div class="header-box">
-            <h1>DEV<br>KOMEDI</h1>
-            <p style="font-size: 0.7rem; margin-top: 5px;">Misi: Bikin Programmer Ketawa</p>
+            <h1>DEV KOMEDI</h1>
+            <p style="font-size: 0.6rem; margin: 0; color: #000; font-weight: bold;">SPY-E 123Tool Edition</p>
         </div>
         <ul class="menu-list">
             <li class="menu-item active" onclick="loadComp(1, this)"><span>💾</span> 01. CTRL+S Trauma</li>
@@ -184,23 +221,25 @@
             <li class="menu-item" onclick="loadComp(19, this)"><span>🧛</span> 19. Mode Kelelawar</li>
             <li class="menu-item" onclick="loadComp(20, this)"><span>🎉</span> 20. Depresi Cuan</li>
         </ul>
-        <div style="padding: 20px; font-size: 10px; opacity: 0.5;">
-            Created for Bos Cak by Gemini SPY-E
+        <div class="branding-footer">
+            PROUDLY DEVELOPED BY<br>
+            <b>SPY-E 123Tool</b>
         </div>
     </aside>
 
     <main id="main">
         <div id="welcome">
             <div class="welcome-title">DEVELOPER<br>KOMEDI</div>
-            <p style="font-size: 1.2rem;">Portal 20 Jenaka Kehidupan Programmer</p>
+            <p style="font-size: 1rem; color: #aaa;">Portal 20 Jenaka Kehidupan Programmer</p>
+            <p style="font-size: 0.8rem; color: var(--accent); margin-top: 5px;">Created by SPY-E 123Tool</p>
             <button class="btn-start" onclick="closeWelcome()">GASS POLL!</button>
         </div>
 
         <div id="top-bar">
-            <div style="display: flex; align-items: center;">
-                <span id="current-title" style="font-weight: 900; font-family: 'Bungee'; color: var(--accent);">01. CTRL+S TRAUMA</span>
+            <span id="current-title">01. CTRL+S TRAUMA</span>
+            <div style="background: #2ecc71; color: #000; padding: 3px 10px; border-radius: 15px; font-size: 10px; font-weight: 900;">
+                LIVE STATUS
             </div>
-            <div class="status-pill">BRAIN STATUS: OVERHEATING</div>
         </div>
 
         <iframe id="content-frame" src="about:blank"></iframe>
@@ -209,24 +248,27 @@
     <script>
         function closeWelcome() {
             document.getElementById('welcome').style.display = 'none';
-            loadComp(1, document.querySelector('.menu-item'));
+            // Set default load
+            const firstMenu = document.querySelector('.menu-item');
+            loadComp(1, firstMenu);
         }
 
         function loadComp(id, el) {
-            // Update Active Menu
+            // Update UI Menu
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
             el.classList.add('active');
 
-            // Update Title
+            // Update Header
             document.getElementById('current-title').textContent = el.textContent.trim();
 
-            // Load Content (In production, these would be separate .html files)
-            // For this demo, we use a placeholder or the content we've generated.
+            // Load Iframe
             const frame = document.getElementById('content-frame');
-            frame.src = `komponen-${id}.html`; 
+            frame.src = `komponen-${id}.html`;
             
-            // Note: Since we are in a sandbox, user will need to have all 20 files 
-            // in the same folder as this index.html to make it work.
+            // Auto scroll menu ke tengah kalau di HP
+            if (window.innerWidth <= 768) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
     </script>
 </body>

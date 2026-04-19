@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #14 - Bahan Bakar Kopi</title>
+    <style>
+        :root {
+            --coffee-brown: #6f4e37;
+            --bg-blur: #2d3436;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-14 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel-row { display: flex; flex: 1; gap: 10px; }
+        .panel {
+            flex: 1;
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-tag {
+            background: #000; color: #fff;
+            padding: 5px 10px; font-size: 0.8rem;
+            margin-bottom: 10px; font-family: monospace;
+        }
+
+        .visual { font-size: 60px; transition: transform 0.3s; }
+
+        #btn-coffee-mode {
+            background: var(--coffee-brown);
+            color: white; border: none;
+            padding: 20px; font-size: 1.2rem;
+            font-weight: 900; cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: COFFEE BOOTING SYSTEM --- */
+        #coffee-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--bg-blur);
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        #screen-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            z-index: 5;
+            transition: all 0.5s;
+        }
+
+        .code-bg {
+            font-family: monospace;
+            color: #55efc4;
+            opacity: 0.1;
+            font-size: 12px;
+            line-height: 1.2;
+            user-select: none;
+        }
+
+        .cup-container {
+            z-index: 10;
+            text-align: center;
+        }
+
+        .cup {
+            font-size: 100px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+        }
+
+        body.switching #comic-page-14 { transform: translateY(-100vh); }
+        body.switching #coffee-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-14">
+        <div class="panel-row">
+            <div class="panel">
+                <div class="status-tag">STATUS: 404 Not Found</div>
+                <div class="visual">😴</div>
+                <p><b>07:00 AM</b><br>Bangun tidur, otak masih loading OS.</p>
+            </div>
+            <div class="panel">
+                <div class="status-tag">STATUS: Connecting...</div>
+                <div class="visual">☕</div>
+                <p><b>07:15 AM</b><br>Satu gelas kopi masuk ke lambung.</p>
+            </div>
+        </div>
+        <div class="panel" style="flex: 0.4;">
+            <div class="status-tag">STATUS: HIGH PERFORMANCE</div>
+            <div class="visual">⚡🚀⚡</div>
+            <p><b>08:00 AM</b><br>Siap bantai 1000 baris kode!</p>
+        </div>
+        <button id="btn-coffee-mode">AKTIFKAN ENGINE KAFEIN ☕</button>
+    </div>
+
+    <div id="coffee-page">
+        <div id="screen-overlay"></div>
+        <div class="code-bg" id="code-stream">
+            </div>
+        <div class="cup-container">
+            <div class="cup" id="coffee-cup">☕</div>
+            <h2 id="boot-msg">KLIK GELAS UNTUK BOOTING OTAK</h2>
+            <p id="percent">Kafein: 0%</p>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-coffee-mode');
+        const cup = document.getElementById('coffee-cup');
+        const overlay = document.getElementById('screen-overlay');
+        const percentTxt = document.getElementById('percent');
+        const msg = document.getElementById('boot-msg');
+        const codeStream = document.getElementById('code-stream');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            fillCode();
+        });
+
+        let caffeine = 0;
+        cup.addEventListener('click', () => {
+            if (caffeine < 100) {
+                caffeine += 25;
+                percentTxt.textContent = `Kafein: ${caffeine}%`;
+                
+                // Kurangi blur dan kegelapan
+                const blurVal = 20 - (caffeine / 5);
+                const opacityVal = 0.8 - (caffeine / 150);
+                overlay.style.backdropFilter = `blur(${blurVal}px)`;
+                overlay.style.background = `rgba(0,0,0,${opacityVal})`;
+                
+                // Efek getar cangkir
+                cup.style.transform = "scale(1.2) rotate(10deg)";
+                setTimeout(() => cup.style.transform = "scale(1) rotate(0)", 100);
+
+                if (caffeine === 100) {
+                    msg.textContent = "OTAK ONLINE! GAS KODING!";
+                    msg.style.color = "#55efc4";
+                    overlay.style.backdropFilter = "blur(0px)";
+                    overlay.style.background = "rgba(0,0,0,0.1)";
+                    document.querySelector('.code-bg').style.opacity = "0.8";
+                }
+            }
+        });
+
+        function fillCode() {
+            let str = "";
+            for(let i=0; i<2000; i++) {
+                str += Math.random() > 0.5 ? "1" : "0";
+                if(i % 50 === 0) str += "<br>";
+            }
+            codeStream.innerHTML = str;
+        }
+    </script>
+</body>
+</html>

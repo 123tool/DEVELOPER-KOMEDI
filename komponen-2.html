@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #2 - Misteri Centering</title>
+    <style>
+        :root {
+            --css-blue: #264de4;
+            --danger: #ff4444;
+            --bg-dev: #2d3436;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            background: #dfe6e9;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            gap: 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .panel {
+            background: white;
+            border: 5px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            text-align: center;
+        }
+
+        .speech {
+            position: absolute;
+            top: 10px;
+            background: #fff;
+            border: 2px solid #000;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Objek Utama: Kotak Merah Masalah */
+        .box-target {
+            width: 50px;
+            height: 50px;
+            background: var(--danger);
+            border: 2px solid #000;
+            transition: all 0.5s;
+        }
+
+        #next-step-btn {
+            grid-column: span 2;
+            background: var(--css-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 5px solid #1a33a3;
+        }
+
+        /* --- FASE 2: EDITOR CSS PENUH --- */
+        #editor-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-dev);
+            color: white;
+            padding: 40px;
+            box-sizing: border-box;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .code-container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-left: 5px solid var(--css-blue);
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .preview-box {
+            width: 100%;
+            height: 200px;
+            background: white;
+            border: 2px dashed #636e72;
+            position: relative;
+        }
+
+        .target {
+            width: 40px;
+            height: 40px;
+            background: var(--danger);
+            position: absolute;
+        }
+
+        body.switching #comic-page-2 { transform: scale(0.8); opacity: 0; }
+        body.switching #editor-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-2">
+        <div class="panel">
+            <div class="speech">"Oke, tinggal tengahkan Div ini..."</div>
+            <div class="box-target" style="margin-top: 40px;"></div>
+        </div>
+        <div class="panel">
+            <div class="speech">"margin: 0 auto; kok gak gerak??"</div>
+            <div class="box-target" style="margin-left: -200px;"></div>
+        </div>
+        <div class="panel">
+            <div class="speech">"pake position: absolute; ...LHO?!"</div>
+            <div class="box-target" style="transform: rotate(45deg) scale(5); opacity: 0.3;"></div>
+        </div>
+        <div class="panel">
+            <div class="speech">"GAS LAH, PAKE FLEXBOX!"</div>
+            <div style="font-size: 40px;">🤯🔧</div>
+        </div>
+        <button id="next-step-btn">KLIK UNTUK DEBUGGING CSS!</button>
+    </div>
+
+    <div id="editor-page">
+        <h2>CSS Debugger v1.0 (Bahasa Indonesia)</h2>
+        <div class="code-container" id="code-logic">
+            /* Mencoba memusatkan elemen... */<br>
+            .kotak-merah { <br>
+            &nbsp;&nbsp;<span id="css-property" style="color: #fab1a0;"></span><br>
+            }
+        </div>
+        <div class="preview-box" id="preview">
+            <div class="target" id="moving-target"></div>
+        </div>
+        <p id="status-msg" style="margin-top: 20px; color: #ff7675;"></p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('next-step-btn');
+        const cssProp = document.getElementById('css-property');
+        const target = document.getElementById('moving-target');
+        const statusMsg = document.getElementById('status-msg');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(startCSSLogic, 1000);
+        });
+
+        function startCSSLogic() {
+            const steps = [
+                { prop: "margin: 0 auto;", pos: "top: 0; left: 0;", msg: "> Gagal. Kenapa dia gak ke tengah?!" },
+                { prop: "text-align: center;", pos: "top: 0; left: 10px;", msg: "> Itu buat teks, Bambang! Bukan buat Div." },
+                { prop: "vertical-align: middle;", pos: "top: 50px; left: 80%;", msg: "> Waduh, malah makin jauh ke kanan." },
+                { prop: "display: flex; justify-content: center;", pos: "top: 40%; left: 45%;", msg: "> HAMPIR! Dikit lagi..." },
+                { prop: "align-items: center;", pos: "top: 40%; left: 45%; border-radius: 50%;", msg: "> Lho, kok malah jadi bulat?!" },
+                { prop: "float: center;", pos: "top: -500px;", msg: "> ERROR: Tidak ada 'float: center' di alam semesta ini!" },
+                { prop: "Sudahlah, pake Table saja.", pos: "top: 45%; left: 45%;", msg: "> JANGAN! Itu cara kuno tahun 1998!" }
+            ];
+
+            let i = 0;
+            function runStep() {
+                if (i < steps.length) {
+                    cssProp.textContent = steps[i].prop;
+                    target.style.cssText += steps[i].pos;
+                    statusMsg.textContent = steps[i].msg;
+                    i++;
+                    setTimeout(runStep, 1500);
+                } else {
+                    statusMsg.style.color = "#55efc4";
+                    statusMsg.textContent = "KESIMPULAN: Developer menyerah dan mengganti profesi jadi tukang martabak.";
+                }
+            }
+            runStep();
+        }
+    </script>
+</body>
+</html>

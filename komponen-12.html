@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #12 - Rabbit Hole</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --bg: #1e272e;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-12 {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step-num {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-right: 20px;
+            color: #dfe6e9;
+        }
+
+        .desc { font-weight: bold; font-size: 1.1rem; }
+
+        #btn-start-rabbit {
+            position: absolute;
+            bottom: 20px; right: 20px;
+            background: #000; color: #fff;
+            padding: 10px 20px; border: none;
+            cursor: pointer; font-weight: bold;
+        }
+
+        /* --- FASE 2: INFINITE TASK GENERATOR --- */
+        #rabbit-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .task-list {
+            flex: 1;
+            overflow-y: auto;
+            border: 2px solid #3d4e5d;
+            padding: 20px;
+            background: #2d3436;
+        }
+
+        .task-item {
+            padding: 10px;
+            border-bottom: 1px solid #3d4e5d;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1s steps(5, end) infinite;
+        }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
+
+        body.switching #comic-page-12 { transform: translateY(-100vh); }
+        body.switching #rabbit-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-12">
+        <div class="panel">
+            <span class="step-num">01</span>
+            <div class="desc">"Cuma mau benerin typo di footer."</div>
+            <div style="font-size: 40px; margin-left: auto;">✍️</div>
+        </div>
+        <div class="panel">
+            <span class="step-num">02</span>
+            <div class="desc">"Tapi kayaknya templatenya harus diganti ke React biar keren."</div>
+            <div style="font-size: 40px; margin-left: auto;">⚛️</div>
+        </div>
+        <div class="panel">
+            <span class="step-num">03</span>
+            <div class="desc">"Ujung-ujungnya rakit server sendiri pakai Raspberry Pi."</div>
+            <div style="font-size: 40px; margin-left: auto;">🕵️‍♂️</div>
+            <button id="btn-start-rabbit">MULAI OVERENGINEERING</button>
+        </div>
+    </div>
+
+    <div id="rabbit-page">
+        <h2>Tugas Awal: Ganti Warna Tombol</h2>
+        <div class="task-list" id="list">
+            <div class="task-item">[✔] Mengidentifikasi warna tombol...</div>
+        </div>
+        <p id="status" class="loading-dots" style="margin-top: 20px; color: #fab1a0;">Menganalisis ketergantungan baru</p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-start-rabbit');
+        const list = document.getElementById('list');
+        const status = document.getElementById('status');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(generateProblems, 1000);
+        });
+
+        const problems = [
+            "Memutuskan untuk memakai Tailwind CSS...",
+            "Ternyata butuh Node.js versi terbaru...",
+            "Update Node.js malah merusak proyek lama...",
+            "Mencoba install ulang Windows...",
+            "Berpikir untuk pindah ke Linux Arch...",
+            "Belajar cara compile kernel sendiri...",
+            "Membuat framework CSS baru karena yang ada jelek...",
+            "Menulis dokumentasi untuk framework yang belum jadi...",
+            "Lupa kalau awalnya cuma mau ganti warna tombol.",
+            "Memutuskan untuk pensiun dan jadi peternak cupang.",
+            "FATAL ERROR: Otak Developer Hang."
+        ];
+
+        function generateProblems() {
+            let i = 0;
+            function addNext() {
+                if (i < problems.length) {
+                    const item = document.createElement('div');
+                    item.className = 'task-item';
+                    item.textContent = "[...] " + problems[i];
+                    list.appendChild(item);
+                    list.scrollTop = list.scrollHeight;
+                    
+                    i++;
+                    setTimeout(addNext, 1500);
+                } else {
+                    status.textContent = "SISTEM OVERLOAD. Silakan restart kehidupan.";
+                    status.style.color = "red";
+                }
+            }
+            addNext();
+        }
+    </script>
+</body>
+</html>

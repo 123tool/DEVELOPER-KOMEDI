@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #10 - Kutukan Revisi Klien</title>
+    <style>
+        :root {
+            --client-gold: #f1c40f;
+            --bg-canvas: #ecf0f1;
+            --border-dark: #2c3e50;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-canvas);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (MODIFIKASI HAKI) --- */
+        #comic-page-10 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .panel-row { display: flex; flex: 1; gap: 10px; }
+        .panel {
+            flex: 1;
+            background: white;
+            border: 4px solid var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .mood-icon { font-size: 50px; margin-bottom: 15px; }
+        .caption { font-weight: bold; color: var(--border-dark); font-size: 0.9rem; }
+
+        #btn-revisi {
+            background: var(--client-gold);
+            color: #000;
+            border: none;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: SIMULASI REVISI INFINITE --- */
+        #revision-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: #fff;
+            display: flex;
+            transition: top 0.8s ease-in-out;
+        }
+
+        .sidebar-chat {
+            width: 300px;
+            background: #f8f9fa;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-bubble {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--client-gold);
+        }
+
+        .preview-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #333;
+            position: relative;
+        }
+
+        #target-object {
+            width: 200px;
+            height: 60px;
+            background: #3498db;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        body.switching #comic-page-10 { transform: scale(0.9); opacity: 0; }
+        body.switching #revision-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-10">
+        <div class="panel-row">
+            <div class="panel">
+                <div class="mood-icon">😊</div>
+                <div class="caption">"V1: Selesai tepat waktu sesuai briefing."</div>
+            </div>
+            <div class="panel">
+                <div class="mood-icon">😵</div>
+                <div class="caption">"Revisi V142: 'Bisa nggak logonya muter-muter?'"</div>
+            </div>
+        </div>
+        <div class="panel" style="flex: 0.4;">
+            <div class="mood-icon">🤡</div>
+            <div class="caption">"V_Final_FIX_BANGET: Kembali ke desain V1."</div>
+        </div>
+        <button id="btn-revisi">TERIMA CHAT KLIEN (REVISI BARU) 💬</button>
+    </div>
+
+    <div id="revision-page">
+        <div class="sidebar-chat" id="chat-box">
+            <h3 style="margin-top:0;">WhatsApp Klien</h3>
+            </div>
+        <div class="preview-area">
+            <div id="target-object">TOMBOL BELI</div>
+            <div style="position:absolute; top:20px; left:20px; color:#aaa; font-family:monospace;">Project: BioLink_SaaS_v2</div>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-revisi');
+        const chatBox = document.getElementById('chat-box');
+        const obj = document.getElementById('target-object');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(startRevisionWar, 1000);
+        });
+
+        const revisions = [
+            { m: "Mas, tolong tombolnya ganti warna merah ya, biar 'ngejreng'.", s: "background: red;" },
+            { m: "Duh merahnya terlalu berani, ganti hijau daun muda aja.", s: "background: #90ee90; color: #000;" },
+            { m: "Bisa buat tombolnya bentuknya bulat gak? Terus kasih bayangan.", s: "border-radius: 50%; width: 150px; height: 150px; box-shadow: 0 20px 50px black;" },
+            { m: "Kok jadi kegedean? Kecilin lagi dong, terus miringin dikit.", s: "transform: rotate(45deg) scale(0.5);" },
+            { m: "Mas, istri saya bilang bagusan yang pertama tadi warnanya biru.", s: "background: #3498db; transform: rotate(0); border-radius: 0; width: 200px; height: 60px; color: white;" },
+            { m: "Oke ini fix. Eh bentar, fontnya ganti Comic Sans ya biar santai.", s: "font-family: 'Comic Sans MS'; font-size: 10px;" },
+            { m: "Bagus! Tapi kok saya lihatnya kurang 'wah' ya? Coba tambahin efek api.", s: "box-shadow: 0 0 50px orange; border: 5px solid red;" },
+            { m: "Mas, budget kita sisa 20rb. Bisa buat kayak Facebook gak?", s: "filter: blur(10px);" }
+        ];
+
+        function startRevisionWar() {
+            let i = 0;
+            function nextMsg() {
+                if (i < revisions.length) {
+                    const bbl = document.createElement('div');
+                    bbl.className = 'chat-bubble';
+                    bbl.textContent = revisions[i].m;
+                    chatBox.appendChild(bbl);
+                    
+                    // Update visual object
+                    obj.style.cssText += revisions[i].s;
+                    
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    i++;
+                    setTimeout(nextMsg, 2500);
+                } else {
+                    const final = document.createElement('div');
+                    final.className = 'chat-bubble';
+                    final.style.background = '#ff7675';
+                    final.textContent = "Klien: 'Mas, kayaknya kita cancel aja ya projeknya, saya buat sendiri pake Canva.'";
+                    chatBox.appendChild(final);
+                }
+            }
+            nextMsg();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #3 - Kutukan Browser Jadul</title>
+    <style>
+        :root {
+            --modern-blue: #00d2ff;
+            --zombie-green: #2ecc71;
+            --ie-blue: #00a1f1;
+            --bg-dark: #1e272e;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            background: #f1f2f6;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-3 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .panel-row {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .panel {
+            flex: 1;
+            background: white;
+            border: 4px solid #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .speech {
+            position: absolute;
+            top: 10px;
+            background: #fff;
+            border: 2px solid #000;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        /* Visual: Website Modern */
+        .web-modern {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(45deg, var(--modern-blue), #3a7bd5);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; font-size: 40px;
+        }
+
+        /* Visual: Si Zombie Browser */
+        .zombie-browser {
+            font-size: 80px;
+            filter: grayscale(1) sepia(1) hue-rotate(90deg);
+        }
+
+        #btn-render {
+            background: #2f3542;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 5px;
+        }
+
+        /* --- FASE 2: SIMULASI RENDER --- */
+        #render-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .browser-mockup {
+            width: 80%;
+            max-width: 800px;
+            height: 400px;
+            background: #fff;
+            border-top: 30px solid #dcdde1;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            color: #000;
+        }
+
+        .browser-bar {
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            display: flex; gap: 5px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #ff7675; }
+
+        .content-to-test {
+            padding: 50px;
+            transition: all 0.5s;
+        }
+
+        .premium-card {
+            width: 200px;
+            padding: 20px;
+            background: var(--modern-blue);
+            border-radius: 20px; /* Modern: Rounded */
+            display: flex;
+            gap: 10px;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+        }
+
+        body.switching #comic-page-3 { transform: translateY(-100vh); }
+        body.switching #render-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-3">
+        <div class="panel-row">
+            <div class="panel">
+                <div class="speech">"Selesai! Pakai CSS Grid & WebGPU!"</div>
+                <div class="web-modern">💎</div>
+            </div>
+            <div class="panel">
+                <div class="speech">"Client: 'Bisa buka di browser ini?'"</div>
+                <div class="zombie-browser">🌐🧟</div>
+            </div>
+        </div>
+        <div class="panel" style="flex: 0.5;">
+            <div class="speech">"Mencoba Render di Browser 'Purba'..."</div>
+            <button id="btn-render">MULAI SIMULASI PENYIKSAAN 💀</button>
+        </div>
+    </div>
+
+    <div id="render-page">
+        <h2 id="browser-name">Browser: Chrome v124 (Modern)</h2>
+        <div class="browser-mockup">
+            <div class="browser-bar">
+                <div class="dot"></div>
+                <div class="dot" style="background: #ffe66d;"></div>
+                <div class="dot" style="background: #4ecdc4;"></div>
+            </div>
+            <div class="content-to-test" id="test-area">
+                <div class="premium-card" id="card">
+                    <div style="width: 30px; height: 30px; background: white; border-radius: 50%;"></div>
+                    <div style="flex: 1; height: 10px; background: white; margin-top: 10px;"></div>
+                </div>
+                <p>Fitur: Flexbox, Grid, Glassmorphism.</p>
+            </div>
+        </div>
+        <p id="log-msg" style="margin-top: 20px; font-family: monospace;"></p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-render');
+        const card = document.getElementById('card');
+        const testArea = document.getElementById('test-area');
+        const logMsg = document.getElementById('log-msg');
+        const bName = document.getElementById('browser-name');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(startRegression, 1000);
+        });
+
+        function startRegression() {
+            const steps = [
+                { name: "Firefox 110", css: "", log: "> Semuanya aman, Bos." },
+                { name: "Internet Explorer 11", css: "border-radius: 0; box-shadow: none; background: blue; color: white;", log: "> Border radius hilang. Box shadow mati. Mulai pusing." },
+                { name: "Internet Explorer 6", css: "width: 800px; height: 1000px; background: #ccc; border: 10px solid red; font-family: serif;", log: "> POSISI HANCUR! Grid tidak dikenal. User lari ketakutan." },
+                { name: "Netscape Navigator (1994)", css: "display: none;", log: "> WEBSITE MATI TOTAL. Silakan kembali ke zaman batu." }
+            ];
+
+            let i = 0;
+            function run() {
+                if (i < steps.length) {
+                    bName.textContent = "Browser: " + steps[i].name;
+                    card.style.cssText += steps[i].css;
+                    logMsg.innerHTML = steps[i].log;
+                    i++;
+                    setTimeout(run, 2000);
+                } else {
+                    logMsg.style.color = "#ff7675";
+                    logMsg.innerHTML = "STATUS: Developer memilih pensiun dan buka ternak lele.";
+                }
+            }
+            run();
+        }
+    </script>
+</body>
+</html>

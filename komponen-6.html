@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #6 - Junior vs Senior</title>
+    <style>
+        :root {
+            --jr-color: #55efc4;
+            --sr-color: #0984e3;
+            --lg-color: #6c5ce7;
+            --bg-dark: #1e272e;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (3 LEVEL) --- */
+        #comic-page-6 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+            box-sizing: border-box;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .level-panel {
+            flex: 1;
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .level-label {
+            width: 120px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            border-right: 3px solid #000;
+            margin-right: 20px;
+        }
+
+        .code-visual {
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #636e72;
+        }
+
+        .badge {
+            position: absolute;
+            top: -10px; right: 20px;
+            padding: 5px 15px;
+            background: #000;
+            color: #fff;
+            font-weight: bold;
+            transform: rotate(2deg);
+        }
+
+        #btn-evolve {
+            background: #2d3436;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: EVOLUTION MACHINE --- */
+        #evolution-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .editor-mockup {
+            width: 80%;
+            max-width: 700px;
+            background: #2d3436;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .editor-header {
+            background: #000;
+            padding: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        #code-display {
+            padding: 30px;
+            min-height: 200px;
+            font-family: 'Consolas', monospace;
+            line-height: 1.5;
+            white-space: pre;
+        }
+
+        .status-evolve {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--jr-color);
+        }
+
+        body.switching #comic-page-6 { transform: scale(0.9); opacity: 0; }
+        body.switching #evolution-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-6">
+        <div class="level-panel" style="border-color: var(--jr-color);">
+            <div class="badge">NAIF</div>
+            <div class="level-label" style="color: var(--jr-color);">Junior</div>
+            <div class="code-visual">
+                // variabel untuk simpan data<br>
+                var data = 10;<br>
+                if (data == 10) { return true; } <br>
+                else { return false; }
+            </div>
+        </div>
+        <div class="level-panel" style="border-color: var(--sr-color);">
+            <div class="badge">EFEKTIF</div>
+            <div class="level-label" style="color: var(--sr-color);">Senior</div>
+            <div class="code-visual">
+                const isTen = data === 10;
+            </div>
+        </div>
+        <div class="level-panel" style="border-color: var(--lg-color);">
+            <div class="badge">MISTERIUS</div>
+            <div class="level-label" style="color: var(--lg-color);">Legend</div>
+            <div class="code-visual">
+                !!(data^10); // Jangan tanya kenapa, ini jalan.
+            </div>
+        </div>
+        <button id="btn-evolve">MASUK KE MESIN EVOLUSI KODE ⚡</button>
+    </div>
+
+    <div id="evolution-page">
+        <div class="editor-mockup">
+            <div class="editor-header">
+                <div class="dot" style="background: #ff5f56;"></div>
+                <div class="dot" style="background: #ffbd2e;"></div>
+                <div class="dot" style="background: #27c93f;"></div>
+                <span style="margin-left: 10px; font-size: 12px; color: #aaa;">script.js — Editor</span>
+            </div>
+            <div id="code-display"></div>
+        </div>
+        <div id="evolve-status" class="status-evolve">LEVEL: JUNIOR</div>
+        <p id="evolve-desc" style="margin-top: 10px; color: #888;"></p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-evolve');
+        const codeDisplay = document.getElementById('code-display');
+        const status = document.getElementById('evolve-status');
+        const desc = document.getElementById('evolve-desc');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(runEvolution, 1000);
+        });
+
+        const stages = [
+            {
+                label: "LEVEL: JUNIOR",
+                color: "#55efc4",
+                code: "function cekData(x) {\n  if (x == true) {\n    return true;\n  } else {\n    return false;\n  }\n}",
+                desc: "Kode kepanjangan, kebanyakan 'jika-maka'."
+            },
+            {
+                label: "LEVEL: SENIOR",
+                color: "#0984e3",
+                code: "const cekData = x => !!x;",
+                desc: "Singkat, padat, berkelas."
+            },
+            {
+                label: "LEVEL: LEGEND",
+                color: "#6c5ce7",
+                code: "/* Tidak butuh fungsi ini. \nSistem sudah tahu apa yang kamu pikirkan. */",
+                desc: "Kodenya hilang, tapi fiturnya jalan. Ajaib."
+            },
+            {
+                label: "LEVEL: BOSS CAK",
+                color: "#ff7675",
+                code: "// Source code dijual ke marketplace.\n// Untung 1000%, pensiun dini.",
+                desc: "Logika tertinggi: Kode jadi duit."
+            }
+        ];
+
+        function runEvolution() {
+            let i = 0;
+            function showStage() {
+                if (i < stages.length) {
+                    codeDisplay.textContent = stages[i].code;
+                    status.textContent = stages[i].label;
+                    status.style.color = stages[i].color;
+                    desc.textContent = stages[i].desc;
+                    
+                    // Efek flash
+                    codeDisplay.style.opacity = 0;
+                    setTimeout(() => { codeDisplay.style.opacity = 1; }, 50);
+
+                    i++;
+                    setTimeout(showStage, 2500);
+                }
+            }
+            showStage();
+        }
+    </script>
+</body>
+</html>

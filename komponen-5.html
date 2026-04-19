@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #5 - Ritual Debugging</title>
+    <style>
+        :root {
+            --stage-bg: #ffffff;
+            --bug-color: #eb4d4b;
+            --text-dark: #2d3436;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #dfe6e9;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (6 TAHAPAN) --- */
+        #comic-page-5 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .stage-card {
+            background: var(--stage-bg);
+            border: 4px solid var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        .stage-num {
+            position: absolute;
+            top: 5px; left: 10px;
+            font-weight: 900; font-size: 1.5rem;
+            opacity: 0.2;
+        }
+
+        .stage-emoji { font-size: 50px; margin-bottom: 10px; }
+        .stage-text { font-weight: bold; line-height: 1.2; }
+
+        #btn-hunt {
+            grid-column: span 3;
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- FASE 2: SIMULASI BUG HUNTER --- */
+        #hunting-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1e1e1e;
+            color: white;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 80%;
+            overflow: hidden;
+            border-bottom: 2px solid #444;
+        }
+
+        .bug {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--bug-color);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+
+        .ui-stats {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.switching #comic-page-5 { transform: translateY(-100vh); }
+        body.switching #hunting-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-5">
+        <div class="stage-card">
+            <span class="stage-num">1</span>
+            <div class="stage-emoji">😌</div>
+            <div class="stage-text">"Gak mungkin ada bug. Kodenya udah sempurna."</div>
+        </div>
+        <div class="stage-card">
+            <span class="stage-num">2</span>
+            <div class="stage-emoji">🤨</div>
+            <div class="stage-text">"Tadi di laptop saya jalan kok..."</div>
+        </div>
+        <div class="stage-card">
+            <span class="stage-num">3</span>
+            <div class="stage-emoji">😰</div>
+            <div class="stage-text">"Lho, kenapa data ini jadi NULL?!"</div>
+        </div>
+        <div class="stage-card">
+            <span class="stage-num">4</span>
+            <div class="stage-emoji">🤮</div>
+            <div class="stage-text">"Siapa sih yang nulis kode sampah ini? (Ternyata saya sendiri)"</div>
+        </div>
+        <div class="stage-card">
+            <span class="stage-num">5</span>
+            <div class="stage-emoji">🕵️‍♂️</div>
+            <div class="stage-text">"Hampir ketemu... kayaknya masalahnya di sini."</div>
+        </div>
+        <div class="stage-card">
+            <span class="stage-num">6</span>
+            <div class="stage-emoji">🤡</div>
+            <div class="stage-text">"Oalah, cuma salah naruh tanda kurung."</div>
+        </div>
+        <button id="btn-hunt">MULAI PERBURUAN BUG! 🐜</button>
+    </div>
+
+    <div id="hunting-page">
+        <div class="ui-stats">
+            <div>
+                <h2 id="msg">Misi: Klik Kotak Merah (Bug)</h2>
+                <p>Status: <span id="status">Stabil</span></p>
+            </div>
+            <div style="text-align: right;">
+                <p>Bug Ditemukan: <span id="kill-count">0</span></p>
+                <p>Bug Tersisa: <span id="live-count">1</span></p>
+            </div>
+        </div>
+        <div class="game-area" id="area">
+            </div>
+    </div>
+
+    <script>
+        const btnHunt = document.getElementById('btn-hunt');
+        const area = document.getElementById('area');
+        const killCounter = document.getElementById('kill-count');
+        const liveCounter = document.getElementById('live-count');
+        const statusText = document.getElementById('status');
+        const msg = document.getElementById('msg');
+
+        let kills = 0;
+        let lives = 1;
+
+        btnHunt.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            createBug(window.innerWidth / 2, window.innerHeight / 2);
+        });
+
+        function createBug(x, y) {
+            const bug = document.createElement('div');
+            bug.className = 'bug';
+            bug.innerHTML = '👾';
+            bug.style.left = x + 'px';
+            bug.style.top = y + 'px';
+
+            bug.addEventListener('click', (e) => {
+                e.stopPropagation();
+                kills++;
+                killCounter.textContent = kills;
+                bug.remove();
+                
+                // Realita Coding: Matikan 1, Muncul 2
+                setTimeout(() => {
+                    spawnMore(e.clientX, e.clientY);
+                }, 100);
+            });
+
+            area.appendChild(bug);
+            moveBug(bug);
+        }
+
+        function moveBug(bug) {
+            if(!bug.parentElement) return;
+            const newX = Math.random() * (area.clientWidth - 50);
+            const newY = Math.random() * (area.clientHeight - 50);
+            
+            bug.style.transition = 'all ' + (Math.random() * 2 + 0.5) + 's ease-in-out';
+            bug.style.left = newX + 'px';
+            bug.style.top = newY + 'px';
+
+            setTimeout(() => moveBug(bug), 2000);
+        }
+
+        function spawnMore(x, y) {
+            createBug(x + 20, y);
+            createBug(x - 20, y);
+            
+            lives = document.querySelectorAll('.bug').length;
+            liveCounter.textContent = lives;
+
+            if (lives > 5) {
+                statusText.textContent = "STRESS";
+                statusText.style.color = "#f9ca24";
+            }
+            if (lives > 10) {
+                statusText.textContent = "KRITIS";
+                statusText.style.color = "#eb4d4b";
+                msg.textContent = "Sertakan judul, deskripsi, untuk di jual source codenya!";
+            }
+            if (lives > 15) {
+                msg.textContent = "MENYERAH. Buka usaha cuci motor aja.";
+            }
+        }
+    </script>
+</body>
+</html>

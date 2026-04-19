@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #4 - Siklus Mood</title>
+    <style>
+        :root {
+            --bg-body: #fdfdfd;
+            --border-color: #222;
+            --mood-happy: #55efc4;
+            --mood-sad: #ff7675;
+            --mood-god: #a29bfe;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Comic Sans MS', cursive; /* Biar kerasa komiknya */
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .panel {
+            border: 5px solid var(--border-color);
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .face { font-size: 80px; margin-bottom: 10px; transition: transform 0.3s; }
+        .caption { font-weight: bold; font-size: 1.1rem; color: #333; }
+
+        .btn-check-mood {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--border-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 5px;
+        }
+
+        /* --- FASE 2: MOOD TRACKER --- */
+        #mood-tracker-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1e1e1e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            transition: top 0.8s ease-in-out;
+        }
+
+        .mood-meter-container {
+            width: 100%;
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        #mood-bar {
+            width: 100%;
+            height: 100%;
+            background: var(--mood-happy);
+            transition: width 0.5s, background 0.5s;
+        }
+
+        .terminal-box {
+            background: #000;
+            flex: 1;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            border: 1px solid #444;
+            overflow-y: auto;
+        }
+
+        body.switching #comic-page-4 { transform: translateY(-100vh); }
+        body.switching #mood-tracker-page { top: 0; }
+        
+        .line { margin-bottom: 5px; }
+        .success { color: #55efc4; }
+        .fail { color: #ff7675; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-4">
+        <div class="panel">
+            <div class="face">😎</div>
+            <div class="caption">"Baru buka VS Code, serasa Dewa."</div>
+        </div>
+        <div class="panel">
+            <div class="face">🤔</div>
+            <div class="caption">"Eror? Paling cuma typo dikit."</div>
+        </div>
+        <div class="panel">
+            <div class="face">😭</div>
+            <div class="caption">"Sudah 2 jam, kenapa tetap eror?!"</div>
+        </div>
+        <div class="panel">
+            <div class="face">😇</div>
+            <div class="caption">"Oalah, cuma kurang titik koma."</div>
+            <button class="btn-check-mood" id="go-btn">CEK LOGIKA MOOD -></button>
+        </div>
+    </div>
+
+    <div id="mood-tracker-page">
+        <h1>Debugger Perasaan v2.0</h1>
+        <p>Mood Saat Ini: <span id="mood-text">Sangat Percaya Diri</span></p>
+        <div class="mood-meter-container">
+            <div id="mood-bar"></div>
+        </div>
+        
+        <div class="terminal-box" id="term">
+            <div class="line">[*] Menginisialisasi proyek 'Cari_Nafkah'...</div>
+        </div>
+    </div>
+
+    <script>
+        const goBtn = document.getElementById('go-btn');
+        const moodBar = document.getElementById('mood-bar');
+        const moodText = document.getElementById('mood-text');
+        const term = document.getElementById('term');
+
+        goBtn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            setTimeout(startMoodCycle, 1000);
+        });
+
+        function addLine(txt, type="") {
+            const div = document.createElement('div');
+            div.className = `line ${type}`;
+            div.textContent = txt;
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function startMoodCycle() {
+            const events = [
+                { t: "Menulis 100 baris kode tanpa Google...", m: 100, label: "Dewa Coding", color: "#55efc4" },
+                { t: "> Menjalankan perintah: npm run dev", m: 95, label: "Optimis", color: "#55efc4" },
+                { t: "[ERROR] Uncaught ReferenceError: 'data' is not defined", m: 60, label: "Bingung", color: "#ffeaa7" },
+                { t: "Searching StackOverflow... Tidak ada jawaban.", m: 30, label: "Gelisah", color: "#fab1a0" },
+                { t: "Mencoba restart laptop (siapa tahu hoki)...", m: 20, label: "Putus Asa", color: "#ff7675" },
+                { t: "Menemukan jawaban di forum Rusia tahun 2012...", m: 50, label: "Ada Harapan", color: "#a29bfe" },
+                { t: "TERNYATA TYPO: 'dats' harusnya 'data'!", m: 100, label: "ILHAM ILAHI", color: "#a29bfe", effect: true }
+            ];
+
+            let i = 0;
+            function run() {
+                if (i < events.length) {
+                    const e = events[i];
+                    addLine(e.t, e.m < 50 ? 'fail' : (e.m > 90 ? 'success' : ''));
+                    moodBar.style.width = e.m + "%";
+                    moodBar.style.background = e.color;
+                    moodText.textContent = e.label;
+                    moodText.style.color = e.color;
+
+                    if(e.effect) {
+                        document.body.style.background = "#2d3436";
+                        setTimeout(() => { document.body.style.background = "#1e1e1e"; }, 200);
+                    }
+
+                    i++;
+                    setTimeout(run, 1800);
+                } else {
+                    addLine("\n[INFO] Developer tidur nyenyak selama 2 jam sebelum besok eror lagi.", "success");
+                }
+            }
+            run();
+        }
+    </script>
+</body>
+</html>

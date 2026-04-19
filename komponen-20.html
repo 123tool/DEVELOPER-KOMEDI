@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #20 - Kekosongan Setelah Sukses</title>
+    <style>
+        :root {
+            --bg-body: #f1f2f6;
+            --succ-green: #2ecc71;
+            --accent-gold: #f1c40f;
+            --border-dark: #2c3e50;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (MODIFIKASI HAKI) --- */
+        #comic-page-20 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel-row { display: flex; flex: 1; gap: 10px; }
+        .panel {
+            flex: 1;
+            background: white;
+            border: 4px solid var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .mood-icon { font-size: 50px; margin-bottom: 15px; }
+        .caption { font-weight: bold; color: var(--border-dark); font-size: 0.9rem; }
+
+        #btn-finish-project {
+            background: var(--succ-green);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- FASE 2: THE VOID SIMULATOR --- */
+        #void-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.8s ease-in-out;
+        }
+
+        #confetti-area {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px; height: 10px;
+            background: var(--accent-gold);
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .main-container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        #next-project-btn {
+            background: var(--border-dark);
+            color: white; border: none;
+            padding: 15px 30px; border-radius: 5px;
+            font-weight: bold; cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.3s;
+        }
+
+        body.switching #comic-page-20 { transform: scale(0.9); opacity: 0; }
+        body.switching #void-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-20">
+        <div class="panel-row">
+            <div class="panel">
+                <div class="mood-icon">🤩</div>
+                <div class="caption">"PROYEK SELESAI, CAIRKAN CUAN, PENSIUN DINI!"</div>
+            </div>
+            <div class="panel">
+                <div class="mood-icon">🤝</div>
+                <div class="caption">"Bug diperbaiki, Klien senang, Tim bubar."</div>
+            </div>
+        </div>
+        <div class="panel" style="flex: 0.4; background: #2c3e50; color: white;">
+            <div class="mood-icon">💀</div>
+            <div class="caption" style="color: white;">"Duduk sendirian depan layar... 'Sekarang ngapain ya?'"</div>
+        </div>
+        <button id="btn-finish-project">RAYAKAN KEBERHASILAN RAKSASA 🎉</button>
+    </div>
+
+    <div id="void-page">
+        <div id="confetti-area">
+            </div>
+        <div class="main-container">
+            <h1 id="main-msg">PROYEK SELESAI! ANDA BEBAS!</h1>
+            <p id="sub-msg">Total Cuan: 100 Juta (Setelah Pajak).</p>
+            <button id="next-project-btn">CARI PROYEK BARU DARI BUMI</button>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-finish-project');
+        const nextBtn = document.getElementById('next-project-btn');
+        const confettiArea = document.getElementById('confetti-area');
+        const mainMsg = document.getElementById('main-msg');
+        const subMsg = document.getElementById('sub-msg');
+        const voidPage = document.getElementById('void-page');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            createConfetti();
+        });
+
+        // Logika "Cari Proyek Baru"
+        nextBtn.addEventListener('click', () => {
+            // Hapus Confetti
+            confettiArea.innerHTML = "";
+            nextBtn.style.opacity = "0"; // Sembunyikan tombol
+            
+            // Suasana Gelap (Kekosongan)
+            voidPage.style.background = "#1a1a1a";
+            voidPage.style.color = "#fff";
+            mainMsg.textContent = "HENING. SENYAP. KOSONG.";
+            subMsg.textContent = "Sistem Sedang Menunggu Proyek Baru... atau Kiamat.";
+            subMsg.style.color = "#f1c40f";
+        });
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                c.style.animationDelay = Math.random() * 2 + 's';
+                confettiArea.appendChild(c);
+            }
+        }
+    </script>
+</body>
+</html>

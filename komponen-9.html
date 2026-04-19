@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #9 - Kekuatan CTRL+C CTRL+V</title>
+    <style>
+        :root {
+            --so-orange: #f48024;
+            --so-bg: #2d2d2d;
+            --bg-body: #f1f2f6;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK (MODIFIKASI HAKI) --- */
+        #comic-page-9 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .icon { font-size: 50px; margin-bottom: 20px; }
+        .text { font-weight: bold; font-size: 1rem; line-height: 1.4; }
+
+        #btn-go-magic {
+            grid-column: span 3;
+            background: var(--so-orange);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: SIMULASI AUTO-PASTE --- */
+        #magic-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--so-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            background: #444;
+            border: 2px solid var(--so-orange);
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .editor-container {
+            flex: 1;
+            background: #1e1e1e;
+            border: 1px solid #555;
+            font-family: 'Consolas', monospace;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .cursor-line {
+            border-left: 2px solid var(--so-orange);
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        body.switching #comic-page-9 { transform: translateY(-100vh); }
+        body.switching #magic-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-9">
+        <div class="panel">
+            <div class="icon">🆘</div>
+            <div class="text">"Eror gila! Deadline tinggal 1 jam!"</div>
+        </div>
+        <div class="panel">
+            <div class="icon">🔍</div>
+            <div class="text">"Cari di Stack Overflow...<br>Ketemu yang bintangnya 500!"</div>
+        </div>
+        <div class="panel">
+            <div class="icon">📋</div>
+            <div class="text">"Copy-Paste tanpa dibaca.<br>Lho, Kok Jalan?!"</div>
+        </div>
+        <button id="btn-go-magic">AKTIFKAN MODE COPY-PASTE 🚀</button>
+    </div>
+
+    <div id="magic-page">
+        <h2>StackOverflow Auto-Fixer v1.0</h2>
+        <input type="text" class="search-bar" id="search" placeholder="Masukkan pesan eror di sini (misal: 'undefined is not a function')">
+        
+        <div class="editor-container" id="editor">
+            <div id="code-output">// Kode ajaib akan muncul di sini...</div>
+            <span class="cursor-line"></span>
+        </div>
+        <p id="status" style="margin-top: 20px; color: var(--so-orange);"></p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-go-magic');
+        const searchInput = document.getElementById('search');
+        const codeOutput = document.getElementById('code-output');
+        const status = document.getElementById('status');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+        });
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                startAutoPaste();
+            }
+        });
+
+        function startAutoPaste() {
+            status.textContent = "[*] Mencari jawaban dari user 'DewaKoding99' di StackOverflow...";
+            codeOutput.textContent = "";
+            
+            const magicCode = [
+                "// Dapatkan dari Stack Overflow",
+                "function fixEverything(data) {",
+                "  // Saya nggak tahu ini buat apa, tapi kata orang di internet ini penting",
+                "  const secret = JSON.parse(JSON.stringify(data)); ",
+                "  ",
+                "  try {",
+                "    return secret.map(x => x.logic_ngawur_tapi_jalan());",
+                "  } catch (e) {",
+                "    console.log('Bismillah, abaikan saja erornya');",
+                "    return ['Selesai', 'Untung', 'Jual'];",
+                "  }",
+                "}",
+                "",
+                "// Berhasil di-paste! Proyek siap dijual ke marketplace."
+            ];
+
+            let i = 0;
+            function typeCode() {
+                if (i < magicCode.length) {
+                    codeOutput.textContent += magicCode[i] + "\n";
+                    i++;
+                    setTimeout(typeCode, 200);
+                } else {
+                    status.textContent = "[✔] BERHASIL! Eror hilang, tapi jangan tanya gimana caranya.";
+                    status.style.color = "#3fb950";
+                }
+            }
+            setTimeout(typeCode, 1500);
+        }
+    </script>
+</body>
+</html>

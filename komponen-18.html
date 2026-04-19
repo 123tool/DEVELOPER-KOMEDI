@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #18 - Horor Legacy Code</title>
+    <style>
+        :root {
+            --legacy-brown: #3d3d3d;
+            --danger: #ff4757;
+            --warn: #ffa502;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-18 {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel {
+            flex: 1;
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .visual-legacy {
+            background: #eee;
+            padding: 10px;
+            border: 1px dashed #666;
+            font-size: 12px;
+            color: #555;
+        }
+
+        #btn-legacy-mode {
+            background: var(--legacy-brown);
+            color: white; border: none;
+            padding: 20px; font-weight: 900;
+            cursor: pointer; text-transform: uppercase;
+        }
+
+        /* --- FASE 2: JENGA CODE SIMULATOR --- */
+        #legacy-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: #1a1a1a;
+            color: #fff;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tower-container {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 5px;
+            width: 300px;
+        }
+
+        .code-block {
+            padding: 10px;
+            background: #2f3542;
+            border-left: 5px solid var(--warn);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .code-block:hover {
+            background: var(--danger);
+            transform: scale(1.05);
+        }
+
+        .collapse {
+            transform: translateY(1000px) rotate(20deg) !important;
+            opacity: 0;
+        }
+
+        body.switching #comic-page-18 { transform: translateY(-100vh); }
+        body.switching #legacy-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-18">
+        <div class="panel">
+            <p><b>Dev Baru:</b> "Benerin bug di proyek warisan kantor..."</p>
+            <div class="visual-legacy">function asu_fix() {<br>&nbsp;&nbsp;var k = 10; // penting<br>}</div>
+        </div>
+        <div class="panel">
+            <p><b>Realita:</b> Kodenya dibuat tahun 2005 pakai bahasa yang sudah punah.</p>
+            <div style="font-size: 50px;">🦖💀</div>
+        </div>
+        <div class="panel">
+            <p>"Hapus satu baris komentar, satu kantor mati lampu."</p>
+            <button id="btn-legacy-mode">BEDAH KODE WARISAN 🏚️</button>
+        </div>
+    </div>
+
+    <div id="legacy-page">
+        <h2 id="msg">MISI: Hapus 1 Baris "Sampah" Tanpa Bikin Sistem Runtuh</h2>
+        <div class="tower-container" id="tower">
+            </div>
+        <p id="alert" style="margin-top: 30px; color: var(--warn); font-family: monospace;"></p>
+    </div>
+
+    <script>
+        const btnSwitch = document.getElementById('btn-legacy-mode');
+        const tower = document.getElementById('tower');
+        const msg = document.getElementById('msg');
+        const alertTxt = document.getElementById('alert');
+
+        btnSwitch.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            buildTower();
+        });
+
+        const codeLines = [
+            "var x = 1; // pondasi utama",
+            "if(true) { run(); } // jangan tanya",
+            "// Kode ini dibuat sambil nangis",
+            "const FIX_DULU = 'oke';",
+            "function bismillah() { return 1; }",
+            "/* Hapus ini = Server Meledak */",
+            "let dats = 'asu_ra_ceto';",
+            "// Kenapa ini ada di sini???"
+        ];
+
+        function buildTower() {
+            codeLines.forEach((line, i) => {
+                const div = document.createElement('div');
+                div.className = 'code-block';
+                div.textContent = line;
+                div.onclick = () => collapseAll();
+                tower.appendChild(div);
+            });
+        }
+
+        function collapseAll() {
+            const blocks = document.querySelectorAll('.code-block');
+            blocks.forEach((b, i) => {
+                setTimeout(() => {
+                    b.classList.add('collapse');
+                }, i * 100);
+            });
+            
+            msg.textContent = "SISTEM RUNTUH TOTAL! 😱";
+            msg.style.color = "red";
+            alertTxt.innerHTML = "FATAL ERROR: Jaringan Internet se-Indonesia putus.<br>Segera pindah negara sebelum ketahuan bos.";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #17 - Bug Pemalu</title>
+    <style>
+        :root {
+            --ghost-white: #f5f6fa;
+            --danger: #e84118;
+            --success: #4cd137;
+            --border: #2f3640;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--ghost-white);
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-17 {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .screen-mini {
+            width: 80px; height: 50px;
+            border: 2px solid #000;
+            margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 10px;
+        }
+
+        #btn-demo-mode {
+            grid-column: span 2;
+            background: var(--border);
+            color: white; border: none;
+            padding: 15px; font-weight: 900;
+            cursor: pointer; text-transform: uppercase;
+        }
+
+        /* --- FASE 2: GHOST BUG SIMULATOR --- */
+        #ghost-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: #1e272e;
+            color: white;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #bug-overlay {
+            width: 80%;
+            max-width: 600px;
+            padding: 40px;
+            border: 5px dashed var(--danger);
+            background: rgba(232, 65, 24, 0.1);
+            text-align: center;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        #demo-fix-btn {
+            background: var(--success);
+            color: white; border: none;
+            padding: 15px 30px; border-radius: 5px;
+            font-weight: bold; cursor: crosshair;
+            margin-top: 20px;
+        }
+
+        body.switching #comic-page-17 { transform: translateY(-100vh); }
+        body.switching #ghost-page { top: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-17">
+        <div class="panel">
+            <div class="screen-mini" style="background: var(--danger); color: white;">ERROR 500</div>
+            <p><b>Dev Sendirian:</b><br>"Satu jam nyari gak ketemu sumber errornya!"</p>
+        </div>
+        <div class="panel">
+            <div class="screen-mini" style="background: var(--success); color: white;">RUNNING...</div>
+            <p><b>Senior Datang:</b><br>"Mana? Perasaan kodenya bener semua."</p>
+        </div>
+        <div class="panel" style="grid-column: span 2;">
+            <div style="font-size: 50px;">🤷‍♂️💀</div>
+            <p>"Sumpah tadi error, Mas! Pas Mas ke sini kodenya jadi tobat!"</p>
+            <button id="btn-demo-mode">SIMULASIKAN BUG PEMALU 👻</button>
+        </div>
+    </div>
+
+    <div id="ghost-page">
+        <div id="bug-overlay">
+            <div id="badge" class="status-badge" style="background: var(--danger);">STATUS: ERROR CRITICAL</div>
+            <h1 id="main-msg">SYSTEM HANCUR LEBUR!</h1>
+            <p id="sub-msg">Memory Leak terdeteksi di seluruh baris kode.</p>
+            
+            <button id="demo-fix-btn">PANGGIL SENIOR (ARAHKAN KRUSOR KE SINI)</button>
+        </div>
+        <p style="margin-top: 40px; color: #888; font-family: monospace;">[*] Mencoba mereproduksi error...</p>
+    </div>
+
+    <script>
+        const btnSwitch = document.getElementById('btn-demo-mode');
+        const overlay = document.getElementById('bug-overlay');
+        const badge = document.getElementById('badge');
+        const mainMsg = document.getElementById('main-msg');
+        const subMsg = document.getElementById('sub-msg');
+        const fixBtn = document.getElementById('demo-fix-btn');
+
+        btnSwitch.addEventListener('click', () => {
+            document.body.classList.add('switching');
+        });
+
+        // Logika "Bug Pemalu" (Ghost Logic)
+        fixBtn.addEventListener('mouseenter', () => {
+            // Pas kursor deket, bug "sembunyi" (seolah-olah Senior lagi liat)
+            overlay.style.borderColor = "var(--success)";
+            overlay.style.background = "rgba(76, 209, 55, 0.1)";
+            badge.style.background = "var(--success)";
+            badge.textContent = "STATUS: RUNNING PERFECTLY";
+            mainMsg.textContent = "SISTEM NORMAL & SEHAT";
+            mainMsg.style.color = "var(--success)";
+            subMsg.textContent = "Tidak ditemukan masalah apapun. Developer cuma halusinasi.";
+        });
+
+        fixBtn.addEventListener('mouseleave', () => {
+            // Pas kursor jauh, bug muncul lagi (Developer ditinggal sendirian)
+            overlay.style.borderColor = "var(--danger)";
+            overlay.style.background = "rgba(232, 65, 24, 0.1)";
+            badge.style.background = "var(--danger)";
+            badge.textContent = "STATUS: ERROR CRITICAL";
+            mainMsg.textContent = "SYSTEM HANCUR LEBUR!";
+            mainMsg.style.color = "var(--danger)";
+            subMsg.textContent = "Memory Leak terdeteksi di seluruh baris kode.";
+        });
+    </script>
+</body>
+</html>

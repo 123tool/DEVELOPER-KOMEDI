@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komedi Dev #15 - Kutukan Titik Koma</title>
+    <style>
+        :root {
+            --err-red: #ff7675;
+            --succ-green: #55efc4;
+            --code-bg: #1e272e;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Consolas', monospace;
+            background: #f1f2f6;
+            overflow: hidden;
+        }
+
+        /* --- FASE 1: KOMIK --- */
+        #comic-page-15 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: transform 0.8s ease-in-out;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .panel {
+            background: white;
+            border: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .code-snippet {
+            background: #eee;
+            padding: 5px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--err-red);
+        }
+
+        #btn-hunt-semi {
+            grid-column: span 2;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- FASE 2: THE SEMICOLON HUNTER --- */
+        #hunt-page {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--code-bg);
+            color: #dcdde1;
+            transition: top 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-hunt {
+            padding: 20px;
+            background: #000;
+            text-align: center;
+            border-bottom: 2px solid var(--err-red);
+        }
+
+        #code-wall {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .code-line {
+            display: block;
+            cursor: default;
+            padding: 2px 5px;
+        }
+
+        .target-line {
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .target-line:hover { background: var(--err-red); color: #000; }
+
+        body.switching #comic-page-15 { transform: scale(0.9); opacity: 0; }
+        body.switching #hunt-page { top: 0; }
+
+        .victory-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--succ-green);
+            color: #000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-family: 'Segoe UI', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="comic-page-15">
+        <div class="panel">
+            <div class="code-snippet">SyntaxError: Unexpected token '}'</div>
+            <div style="font-size: 50px;">🤔</div>
+            <p>"Errornya di baris 400, tapi baris 400 kodenya bener."</p>
+        </div>
+        <div class="panel">
+            <div style="font-size: 50px;">🤯🔧</div>
+            <p>"Ganti Framework, instal ulang Windows, beli laptop baru."</p>
+        </div>
+        <div class="panel" style="grid-column: span 2; height: 100px;">
+            <p><b>Realita:</b> Cuma kurang <b>;</b> di baris 399.</p>
+            <div style="font-size: 40px;">🤡</div>
+        </div>
+        <button id="btn-hunt-semi">MULAI OPERASI CARI TITIK KOMA</button>
+    </div>
+
+    <div id="hunt-page">
+        <div class="header-hunt">
+            <h2 id="mission-text">MISI: Temukan 1 Baris Yang Kurang Titik Koma (;)</h2>
+        </div>
+        <div id="code-wall"></div>
+        
+        <div id="victory" class="victory-overlay">
+            <h1>MISI BERHASIL!</h1>
+            <p>Sistem Online Kembali. Anda tidak jadi Gila.</p>
+            <div style="font-size: 100px;">🎉🚀</div>
+            <button onclick="location.reload()" style="margin-top:20px; padding:10px;">Lanjut Koding</button>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-hunt-semi');
+        const codeWall = document.getElementById('code-wall');
+        const victory = document.getElementById('victory');
+        const mission = document.getElementById('mission-text');
+
+        btn.addEventListener('click', () => {
+            document.body.classList.add('switching');
+            generateCodeWall();
+        });
+
+        function generateCodeWall() {
+            const lines = 100;
+            const targetLine = Math.floor(Math.random() * lines) + 20;
+            
+            for (let i = 0; i < lines + 50; i++) {
+                const span = document.createElement('span');
+                span.className = 'code-line';
+                
+                if (i === targetLine) {
+                    span.textContent = `let data_${i} = fetchFromServer(id)${""} // Kenapa eror ya?`;
+                    span.classList.add('target-line');
+                    span.onclick = () => {
+                        victory.style.display = 'flex';
+                    };
+                } else {
+                    span.textContent = `let data_${i} = processData(val);`;
+                }
+                codeWall.appendChild(span);
+            }
+        }
+    </script>
+</body>
+</html>
